@@ -33,8 +33,9 @@ with tf.Session() as sess: #开始一个会话
     sess.run(init_op)
     coord=tf.train.Coordinator()
     threads= tf.train.start_queue_runners(coord=coord)
-    img2, label2 = sess.run([img,label])#在会话中取出image和label
-    print( "label2=" + str(label2) )
-    print( "img2=" + str(img2) )
+    for i in range(2):
+        img2, label2 = sess.run([img,label])#在会话中取出image和label
+        print( "label2=" + str(label2) )
+        print( "img2=" + str(img2) )
     coord.request_stop()
     coord.join(threads)
