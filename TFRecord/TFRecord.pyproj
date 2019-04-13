@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>f8ba1dab-649f-4fed-befb-0b79c50415ae</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>TFRecord_Reader.py</StartupFile>
+    <StartupFile>TFRecord.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>

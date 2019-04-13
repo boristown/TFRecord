@@ -11,7 +11,7 @@ def read_and_decode(filename): # 读入dog_train.tfrecords
     _, serialized_example = reader.read(filename_queue)#返回文件名和文件
     features = tf.parse_single_example(serialized_example,
                                        features={
-                                           'prices' : tf.FixedLenFeature([5], tf.float32, default_value=[0.0]*5),
+                                           'prices' : tf.FixedLenFeature([100], tf.float32, default_value=[0.0]*100),
                                            'label': tf.FixedLenFeature([1], tf.int64, default_value=[0]),
                                            #'img_raw' : tf.FixedLenFeature([], tf.string),
                                        })#将image数据和label取出来
@@ -20,7 +20,9 @@ def read_and_decode(filename): # 读入dog_train.tfrecords
     prices = tf.cast(features['prices'], tf.float32) #在流中抛出label张量
     return prices, label
 
-prices, label = read_and_decode("zero_train.tfrecords") #要生成的文件
+prices, label = read_and_decode("zero_train.tfrecord",
+                                    options=tf.python_io.TFRecordOptions(
+                                        tf.python_io.TFRecordCompressionType.ZLIB)) #要生成的文件
 print( "label=" + str(label) )
 print( "prices=" + str(prices) )
 with tf.Session() as sess: #开始一个会话
@@ -28,7 +30,7 @@ with tf.Session() as sess: #开始一个会话
     sess.run(init_op)
     coord=tf.train.Coordinator()
     threads= tf.train.start_queue_runners(coord=coord)
-    for i in range(2):
+    for i in range(10):
         prices2, label2 = sess.run([prices,label])#在会话中取出image和label
         print( "label=" + str(label2) )
         print( "prices=" + str(prices2) )
