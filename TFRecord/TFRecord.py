@@ -44,8 +44,9 @@ for file_index in range(len(dir)):
             example = tf.train.Example(features=tf.train.Features(feature={
                 "prices": tf.train.Feature(float_list=tf.train.FloatList(value=list(map(float,csvline[0:100])))),
                 "label": tf.train.Feature(int64_list=tf.train.Int64List(value=list(map(int,csvline[100:101])))),
-        }))
-        tfwriters[writer_key].write(example.SerializeToString()) 
+            }))
+            tfwriters[writer_key].write(example.SerializeToString()) 
+            tfwritercount[writer_key] += 1
 
 for writerkey, tfwriter in tfwriters.items():
     print("%s=%d" % (writerkey, tfwritercount[writerkey]))
