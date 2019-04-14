@@ -2,8 +2,6 @@ import os
 import tensorflow as tf 
 import numpy as np
 
-
-
 def read_and_decode(filename): # 读入dog_train.tfrecords
     filename_queue = tf.train.string_input_producer([filename])#生成一个queue队列
 

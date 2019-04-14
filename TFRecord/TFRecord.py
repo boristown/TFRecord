@@ -1,20 +1,52 @@
 import os 
 import tensorflow as tf 
 import numpy as np
+import csv
+import glob
+import random
 
-cwd= 'data/' 
-classes={'husky','chihuahua'} #人为 设定 2 类
-writer= tf.python_io.TFRecordWriter("zero_train.tfrecord",
-                                    options=tf.python_io.TFRecordOptions(
-                                        tf.python_io.TFRecordCompressionType.ZLIB)) #要生成的文件
+path = 'I:/Training/20190414/*.csv' 
+dir = glob.glob(path)
+package_size = 10000000
+current_size = 0
+package_index =0
+test_ratio = 0.01 #test data 1%
+validation_ratio = 0.01 #validation data 1%
+train_ratio = 1.0 - test_ratio - validation_ratio #train data 98%
+random_list = np.random.rand(len(dir))
 
-#for index,name in enumerate(classes):
-for index in range(1000000):
-    example = tf.train.Example(features=tf.train.Features(feature={
-        "prices": tf.train.Feature(float_list=tf.train.FloatList(value=[i*0.01 for i in range(100)])),
-        "label": tf.train.Feature(int64_list=tf.train.Int64List(value=[index])),
-        #'img_raw': tf.train.Feature(bytes_list=tf.train.BytesList(value=[img_raw]))
-    })) #example对象对label和image数据进行封装
-    writer.write(example.SerializeToString())  #序列化为字符串
+tfwriters = {}
+tfwritercount = {}
 
-writer.close()
+for file_index in range(len(dir)):
+    print("processing %s" % dir[file_index])
+    random_float = random_list[file_index]
+    file_path = dir[file_index]
+    prefix = ""
+    if(random_float < train_ratio):
+        prefix="train-"
+    elif(random_float < train_ratio + eval_ratio):
+        prefix="dev-"
+    else:
+        prefix="validation-"
+    writer_key = prefix + ("%03d" % package_index) +".tfrecord"
+    if writer_key not in tfwriters:
+        tfwriter = tf.python_io.TFRecordWriter(writer_key,
+                                        options=tf.python_io.TFRecordOptions(
+                                            tf.python_io.TFRecordCompressionType.ZLIB))
+        tfwriters[writer_key] = tfwriter
+        tfwritercount[writer_key] = 0
+
+    with open(file_path, 'r') as f:
+        csvreader = csv.reader(f)
+        csvlist = list(csvreader)
+        for csvline in csvlist:
+            example = tf.train.Example(features=tf.train.Features(feature={
+                "prices": tf.train.Feature(float_list=tf.train.FloatList(value=[csvline[0:100]])),
+                "label": tf.train.Feature(int64_list=tf.train.Int64List(value=[csvline[100:101]])),
+        }))
+        tfwriters[writer_key].write(example.SerializeToString()) 
+
+for writerkey, tfwriter in tfwriters.iteritems():
+    print("%s=%d" % writerkey, tfwritercount[writerkey])
+    tfwriter.close()
