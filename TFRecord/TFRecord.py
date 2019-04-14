@@ -25,7 +25,7 @@ for file_index in range(len(dir)):
     prefix = ""
     if(random_float < train_ratio):
         prefix="train-"
-    elif(random_float < train_ratio + eval_ratio):
+    elif(random_float < train_ratio + validation_ratio):
         prefix="dev-"
     else:
         prefix="validation-"
@@ -42,11 +42,11 @@ for file_index in range(len(dir)):
         csvlist = list(csvreader)
         for csvline in csvlist:
             example = tf.train.Example(features=tf.train.Features(feature={
-                "prices": tf.train.Feature(float_list=tf.train.FloatList(value=[csvline[0:100]])),
-                "label": tf.train.Feature(int64_list=tf.train.Int64List(value=[csvline[100:101]])),
+                "prices": tf.train.Feature(float_list=tf.train.FloatList(value=list(map(float,csvline[0:100])))),
+                "label": tf.train.Feature(int64_list=tf.train.Int64List(value=list(map(int,csvline[100:101])))),
         }))
         tfwriters[writer_key].write(example.SerializeToString()) 
 
-for writerkey, tfwriter in tfwriters.iteritems():
-    print("%s=%d" % writerkey, tfwritercount[writerkey])
+for writerkey, tfwriter in tfwriters.items():
+    print("%s=%d" % (writerkey, tfwritercount[writerkey]))
     tfwriter.close()
