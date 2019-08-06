@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>f8ba1dab-649f-4fed-befb-0b79c50415ae</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>TFRecord.py</StartupFile>
+    <StartupFile>TFRecord_MSSQL.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,6 +21,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="TFRecord_MSSQL.py" />
     <Compile Include="TFRecord.py" />
     <Compile Include="TFRecord_Reader.py">
       <SubType>Code</SubType>
