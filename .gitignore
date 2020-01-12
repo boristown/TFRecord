@@ -115,3 +115,6 @@ dmypy.json
 *.tfrecord
 *.tfrecord
 *.tfrecord
+TFRecord/.vs/TFRecord/v15/.suo
+TFRecord/.vs/TFRecord/v16/.suo
+*.pyproj
